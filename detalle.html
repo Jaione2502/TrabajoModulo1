@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Receta</title>
+  <link rel="stylesheet" href="styles/detalle.css">
+</head>
+<body>
+ 
+      <!-- Menú superior -->
+      <header>
+        <nav>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Recetas</a></li>
+                <li><a href="#">Buscar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+  <main id="detalle-receta">
+    <!-- Aquí aparecerán los detalles de la receta -->
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Recetas de Cocina EBIS. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    const apiKey = '14a96f3eeb7242fdb189b3560d91cd49'; // Reemplaza con tu clave de API de Spoonacular
+
+    // Obtener el ID de la receta de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const recetaId = urlParams.get('id');
+
+    // Cargar los detalles de la receta
+    function cargarDetalleReceta() {
+      fetch(`https://api.spoonacular.com/recipes/${recetaId}/information?apiKey=${apiKey}`)
+        .then(response => response.json())
+        .then(data => mostrarDetalleReceta(data))
+        .catch(error => console.error('Error al cargar los detalles de la receta:', error));
+    }
+
+    // Función para mostrar los detalles
+    function mostrarDetalleReceta(receta) {
+      const detalleElemento = document.getElementById('detalle-receta');
+      detalleElemento.innerHTML = `
+        <h2>${receta.title}</h2>
+        <img src="${receta.image}" alt="${receta.title}">
+        <h3>Ingredientes</h3>
+        <ul>
+          ${receta.extendedIngredients.map(ingrediente => `<li>${ingrediente.original}</li>`).join('')}
+        </ul>
+        <h3>Instrucciones</h3>
+        <p>${receta.instructions}</p>
+      `;
+    }
+
+    // Llamar a la función al cargar la página
+    document.addEventListener('DOMContentLoaded', cargarDetalleReceta);
+  </script>
+</body>
+</html>
